@@ -1,4 +1,4 @@
-const name = process.argv[2];
+const name = process.argv[2].toLowerCase();
 
 const pg = require('pg');
 const settings = require('./settings');
@@ -11,7 +11,7 @@ database.connect((err) => {
   }
   console.log('connected to db!');
 
-  const query = 'SELECT * FROM famous_people WHERE first_name LIKE $1 OR last_name LIKE $1';
+  const query = 'SELECT * FROM famous_people WHERE lower(first_name) LIKE $1 OR lower(last_name) LIKE $1';
 
   database.query(query, ['%'+name+'%'], (err, result) => {
     if (err) {
@@ -20,10 +20,15 @@ database.connect((err) => {
 
     console.log('Searching ...');
 
-    //error here if null
+    if (result.rowCount < 1) {
+      console.log('No results found');
+      database.end();
+      return;
+    }
+
     console.log(`Found ${result.rowCount} person(s) by the name ${name}:`)
 
-    for (let i = 0; i < result.rowCount; i ++) {
+    for (let i = 0; i < result.rowCount; i++) {
       let birthYear = result.rows[i].birthdate.getUTCFullYear();
       let birthMonth = result.rows[i].birthdate.getUTCMonth();
       let birthDate = result.rows[i].birthdate.getUTCDate();
