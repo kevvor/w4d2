@@ -10,7 +10,7 @@ knex.select()
   .asCallback(function (err, result) {
     console.log(`Found ${result.length} Person(s) with the name ${name}:`)
     result.forEach(function (row,index){
-      let dob = row.birthdate.toString().substring(0,15);
+      let dob = row.birthdate.toString().substring(0,15); // adjust for format not exactly as it is in compass (https://stackoverflow.com/questions/3552461/how-to-format-a-javascript-date)
       console.log(`-${index+1} :${row.first_name} ${row.last_name}, born '${dob}'`);
     });
   knex.destroy();

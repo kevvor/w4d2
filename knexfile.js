@@ -1,11 +1,17 @@
 // Update with your config settings.
+const settings = require('./settings');
 
 module.exports = {
 
   development: {
-    client: 'sqlite3',
+    client: 'pg',
     connection: {
-      filename: './dev.sqlite3'
+      user      : settings.connection.user,
+      password  : settings.connection.password,
+      database  : settings.connection.database,
+      host      : settings.connection.hostname,
+      port      : settings.connection.port,
+      ssl       : settings.connection.ssl
     }
   },
 
